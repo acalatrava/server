@@ -53,7 +53,7 @@ class CacheWrapper extends Cache {
 	}
 
 	/**
-	 * Make it easy for wrappers to modify every returned cache entry
+	 * Makes it easy for wrappers to modify every returned cache entry
 	 *
 	 * @param ICacheEntry $entry
 	 * @return ICacheEntry

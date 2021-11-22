@@ -107,8 +107,8 @@ class CacheJail extends CacheWrapper {
 	}
 
 	/**
-	 * @param ICacheEntry|array $entry
-	 * @return array
+	 * @param ICacheEntry $entry
+	 * @return ICacheEntry
 	 */
 	protected function formatCacheEntry($entry) {
 		if (isset($entry['path'])) {
@@ -118,7 +118,7 @@ class CacheJail extends CacheWrapper {
 	}
 
 	/**
-	 * get the stored metadata of a file or folder
+	 * Get the stored metadata of a file or folder
 	 *
 	 * @param string /int $file
 	 * @return ICacheEntry|false
@@ -229,7 +229,11 @@ class CacheJail extends CacheWrapper {
 	}
 
 	private function formatSearchResults($results) {
-		return array_map(function ($entry) {
+		$results = array_filter($results, function ($entry): bool {
+			return $entry !== false;
+		});
+
+		return array_map(function (ICacheEntry $entry): ICacheEntry {
 			$entry['path'] = $this->getJailedPath($entry['path'], $this->getGetUnjailedRoot());
 			return $entry;
 		}, $results);
@@ -324,7 +328,11 @@ class CacheJail extends CacheWrapper {
 		$result = $query->execute();
 		$results = $this->searchResultToCacheEntries($result);
 		$result->closeCursor();
-		return $this->formatSearchResults($results);
+		$results = array_map(function ($entry) {
+			return $this->getCache()->formatCacheEntry($entry);
+		}, $results);
+		$results = $this->formatSearchResults($results);
+		return $results;
 	}
 
 	/**
