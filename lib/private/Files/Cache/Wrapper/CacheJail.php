@@ -229,10 +229,13 @@ class CacheJail extends CacheWrapper {
 	}
 
 	private function formatSearchResults($results) {
-		$results = array_map(function ($entry) {
-			if ($this->getCache() instanceof CacheWrapper) {
-				// Avoid calling CacheJail::getJailedPath without the unjailedRoot
-				return $this->getCache()->formatCacheEntry($entry);
+		$results = array_map(function (ICacheEntry $entry) {
+			$cacheWrapper = $this;
+			while (($cacheWrapper instanceof CacheWrapper) && $entry !== false) {
+				if (!($cacheWrapper instanceof CacheJail)) { // We apply the jail at the end
+					$entry = $cacheWrapper->formatCacheEntry($entry);
+				}
+				$cacheWrapper = $cacheWrapper->getCache();
 			}
 			return $entry;
 		}, $results);
