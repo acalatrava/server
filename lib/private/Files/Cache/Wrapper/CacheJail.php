@@ -229,6 +229,14 @@ class CacheJail extends CacheWrapper {
 	}
 
 	private function formatSearchResults($results) {
+		$results = array_map(function ($entry) {
+			if ($this->getCache() instanceof CacheWrapper) {
+				// Avoid calling CacheJail::getJailedPath without the unjailedRoot
+				return $this->getCache()->formatCacheEntry($entry);
+			}
+			return $entry;
+		}, $results);
+
 		$results = array_filter($results, function ($entry): bool {
 			return $entry !== false;
 		});
@@ -328,11 +336,7 @@ class CacheJail extends CacheWrapper {
 		$result = $query->execute();
 		$results = $this->searchResultToCacheEntries($result);
 		$result->closeCursor();
-		$results = array_map(function ($entry) {
-			return $this->getCache()->formatCacheEntry($entry);
-		}, $results);
-		$results = $this->formatSearchResults($results);
-		return $results;
+		return $this->formatSearchResults($results);
 	}
 
 	/**
