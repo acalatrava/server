@@ -224,7 +224,7 @@ class CacheWrapper extends Cache {
 	 */
 	public function search($pattern) {
 		$results = $this->getCache()->search($pattern);
-		return array_filter(array_map([$this, 'formatCacheEntry'], $results), function($entry) {
+		return array_filter(array_map([$this, 'formatCacheEntry'], $results), function ($entry) {
 			return $entry !== false;
 		});
 	}
@@ -237,14 +237,14 @@ class CacheWrapper extends Cache {
 	 */
 	public function searchByMime($mimetype) {
 		$results = $this->getCache()->searchByMime($mimetype);
-		return array_filter(array_map([$this, 'formatCacheEntry'], $results), function($entry) {
+		return array_filter(array_map([$this, 'formatCacheEntry'], $results), function ($entry) {
 			return $entry !== false;
 		});
 	}
 
 	public function searchQuery(ISearchQuery $query) {
 		$results = $this->getCache()->searchQuery($query);
-		return array_filter(array_map([$this, 'formatCacheEntry'], $results), function($entry) {
+		return array_filter(array_map([$this, 'formatCacheEntry'], $results), function ($entry) {
 			return $entry !== false;
 		});
 	}
