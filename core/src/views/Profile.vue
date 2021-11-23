@@ -264,6 +264,7 @@ export default {
 	},
 
 	mounted() {
+		document.title = `${this.displayname || this.userId} - ${document.title}`
 		subscribe('user_status:status.updated', this.handleStatusUpdate)
 	},
 
