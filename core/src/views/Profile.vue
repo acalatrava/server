@@ -264,11 +264,15 @@ export default {
 	},
 
 	mounted() {
-		subscribe('user_status:status.updated', this.handleStatusUpdate)
+		if (this.isCurrentUser) {
+			subscribe('user_status:status.updated', this.handleStatusUpdate)
+		}
 	},
 
 	beforeDestroy() {
-		unsubscribe('user_status:status.updated', this.handleStatusUpdate)
+		if (this.isCurrentUser) {
+			unsubscribe('user_status:status.updated', this.handleStatusUpdate)
+		}
 	},
 
 	methods: {
